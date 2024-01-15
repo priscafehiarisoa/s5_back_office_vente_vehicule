@@ -12,7 +12,16 @@ const InsertMoteur = () => {
     nom_moteur: '',
     puissance: ''
   });
+  const handleDelete = async (id) => {
+    console.log('Deleting moteur with id:', id);
 
+    try {
+      await axios.delete(`${link}/moteur/${id}`);
+      // Update the state after deletion
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const handleSubmit = async () => {
     console.log(formData);
     try {
@@ -117,6 +126,7 @@ const InsertMoteur = () => {
                         style={{
                           color:'errorDark'
                         }}
+                        onClick={() => handleDelete(f.id_moteur)}
                       >
                         {' '}
                         Supprimer
