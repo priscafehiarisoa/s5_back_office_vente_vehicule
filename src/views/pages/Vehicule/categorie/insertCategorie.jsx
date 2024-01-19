@@ -4,13 +4,9 @@ import axios from 'axios';
 import {
   Button,
   Card,
-  FormControl,
   Grid,
   IconButton,
-  InputLabel,
-  MenuItem,
   Paper,
-  Select,
   Table,
   TableBody,
   TableCell,
@@ -26,32 +22,30 @@ import MainCard from 'ui-component/cards/MainCard';
 import { IconPencil, IconTrash } from '@tabler/icons';
 import TablePagination from '@mui/material/TablePagination';
 
-const InsertModele = () => {
+const InsertCategorie = () => {
   const link = `${config.http}://${config.host}:${config.port}`;
   const [inserted, setInserted] = useState(0);
   const theme = useTheme();
 
   // ito ihany no ovaina
-  const [modele, setModele] = useState([]);
-  const [marque, setMarque] = useState([]);
+  const [categorie, setCategorie] = useState([]);
+
   //pagination
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const indexOfLastRow = (page + 1) * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentRows = modele.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
+  const currentRows = categorie.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
 
   //
 
   const [formData, setFormData] = useState({
-    nom_modele: '',
-
-    id_marque: ''
+    nom_categorie: ''
   });
 
   const handleSubmit = async () => {
     try {
-      const resp = await axios.post(link + '/modele', formData);
+      const resp = await axios.post(link + '/categorie', formData);
       setInserted(inserted + 1);
     } catch (e) {
       console.log(e);
@@ -61,11 +55,8 @@ const InsertModele = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const fo = await axios.get(link + '/modele');
-        const mar = await axios.get(link + '/marque');
-
-        setModele(fo.data.donnee);
-        setMarque(mar.data.donnee);
+        const fo = await axios.get(link + '/categorie');
+        setCategorie(fo.data.donnee);
       } catch (e) {
         console.log(e);
       }
@@ -171,37 +162,22 @@ const InsertModele = () => {
         >
           <CardWrapper>
             <Typography variant="h4" color={theme.palette.grey.A700}>
-              Inserer un nouveau modele
+              Inserer une nouvelle categorie
             </Typography>
           </CardWrapper>
           <form className="">
             <TextField
               id="standard-basic"
-              label="Modele"
+              label="Categorie"
               variant="standard"
               style={{ flexGrow: 1, width: '80%', margin: '3% 10%' }}
               fullWidth
-              name="nom_modele"
-              onChange={(e) => setFormData({ ...formData, nom_modele: e.target.value })}
+              name="nom_categorie"
+              onChange={(e) => setFormData({ ...formData, nom_categorie: e.target.value })}
               required
             />
 
-            <FormControl variant="standard" sx={{ m: 1, minWidth: 170 }} style={{ flexGrow: 1, width: '80%', margin: '3% 10%' }}>
-              <InputLabel id="demo-simple-select-label">Marque</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="marque"
-                style={{ marginTop: '20px' }}
-                onChange={(e) => setFormData({ ...formData, id_marque: e.target.value })}
-              >
-                {marque.map((f) => (
-                  <MenuItem key={f.id_marque} value={f.id_marque}>
-                    {f.nom_marque} {f.id_marque}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+
             <div>
               <Button
                 variant="contained"
@@ -209,7 +185,7 @@ const InsertModele = () => {
                 onClick={handleSubmit}
                 style={{ margin: '3% 10%', backgroundColor: theme.palette.primary.dark }}
               >
-                Ajouter modele
+                Ajouter categorie
               </Button>
             </div>
           </form>
@@ -229,18 +205,15 @@ const InsertModele = () => {
         >
           <CardWrapperwarning>
             <Typography variant="h4" color={theme.palette.grey.A700}>
-              Liste des Models
+              Liste des categories
             </Typography>
           </CardWrapperwarning>
-          <TableContainer sx={{ maxHeight: '80%', minHeight: '59%', margin: '3% 3%' }}>
+          <TableContainer sx={{ maxHeight: '80%', minHeight:'59%', margin: '3% 3%' }}>
             <Table style={{ margin: '2%', width: '95%' }} stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
                   <TableCell style={{ backgroundColor: theme.palette.secondary.light }} align={'center'}>
-                    Modele
-                  </TableCell>
-                  <TableCell style={{ backgroundColor: theme.palette.secondary.light }} align={'center'}>
-                    Marque
+                    categorie
                   </TableCell>
                   <TableCell style={{ backgroundColor: theme.palette.secondary.light }} align={'center'}></TableCell>
                   <TableCell style={{ backgroundColor: theme.palette.secondary.light }} align={'center'}></TableCell>
@@ -250,10 +223,7 @@ const InsertModele = () => {
                 {currentRows?.map((f) => (
                   <TableRow key={f.id}>
                     <TableCell align={'center'} className=" align-middle ">
-                      {f.nom_modele}
-                    </TableCell>
-                    <TableCell align={'center'} className="">
-                      {f.marque.nom_marque}
+                      {f.nom_categorie}
                     </TableCell>
                     <TableCell align={'center'} width={'10%'}>
                       <IconButton aria-label="delete" style={{ color: theme.palette.warning.dark }}>
@@ -271,10 +241,10 @@ const InsertModele = () => {
             </Table>
           </TableContainer>
           <TablePagination
-            style={{ marginTop: '8%' }}
+            style={{marginTop:'8%'}}
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={modele.length}
+            count={categorie.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={(event, newPage) => setPage(newPage)}
@@ -289,4 +259,4 @@ const InsertModele = () => {
   );
 };
 
-export default InsertModele;
+export default InsertCategorie;
