@@ -144,7 +144,10 @@ const InsertPays = () => {
   });
 
   //////////fonction pour la table//////////////////////
-
+  const handledelete = async (id) => {
+    const resp = await axios.put(link + `/pays/updateEtat/${id}`);
+    setInserted(inserted+1);
+  };
   //////////////////////////////////////////////////////
   return (
     <Grid container spacing={2}>
@@ -226,7 +229,7 @@ const InsertPays = () => {
                       {f.nom_pays}
                     </TableCell>
                     <TableCell align={'center'} width={'10%'}>
-                      <IconButton aria-label="delete" style={{ color: theme.palette.warning.dark }}>
+                      <IconButton aria-label="delete" style={{ color: theme.palette.warning.dark }} onClick={() => handledelete(f.id_pays)}>
                         <IconTrash fontSize="small" />
                       </IconButton>
                     </TableCell>

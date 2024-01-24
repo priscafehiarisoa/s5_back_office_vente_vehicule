@@ -144,7 +144,10 @@ const InsertCouleur = () => {
   });
 
   //////////fonction pour la table//////////////////////
-
+  const handledelete = async (id) => {
+    const resp = await axios.put(link + `/couleur/updateEtat/${id}`);
+    setInserted(inserted+1);
+  };
   //////////////////////////////////////////////////////
   return (
     <Grid container spacing={2}>
@@ -225,7 +228,7 @@ const InsertCouleur = () => {
                       {f.nom_couleur}
                     </TableCell>
                     <TableCell align={'center'} width={'10%'}>
-                      <IconButton aria-label="delete" style={{ color: theme.palette.warning.dark }}>
+                      <IconButton aria-label="delete" style={{ color: theme.palette.warning.dark }} onClick={() => handledelete(f.id_couleur)}>
                         <IconTrash fontSize="small" />
                       </IconButton>
                     </TableCell>

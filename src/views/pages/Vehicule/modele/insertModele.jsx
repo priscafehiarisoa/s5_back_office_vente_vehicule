@@ -153,7 +153,10 @@ const InsertModele = () => {
   });
 
   //////////fonction pour la table//////////////////////
-
+  const handledelete = async (id) => {
+    const resp = await axios.put(link + `/modele/updateEtat/${id}`);
+    setInserted(inserted+1);
+  };
   //////////////////////////////////////////////////////
   return (
     <Grid container spacing={2}>
@@ -256,7 +259,7 @@ const InsertModele = () => {
                       {f.marque.nom_marque}
                     </TableCell>
                     <TableCell align={'center'} width={'10%'}>
-                      <IconButton aria-label="delete" style={{ color: theme.palette.warning.dark }}>
+                      <IconButton aria-label="delete" style={{ color: theme.palette.warning.dark }} onClick={() => handledelete(f.id_modele)}>
                         <IconTrash fontSize="small" />
                       </IconButton>
                     </TableCell>

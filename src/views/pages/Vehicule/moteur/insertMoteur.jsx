@@ -145,7 +145,10 @@ const InsertMoteur = () => {
   });
 
   //////////fonction pour la table//////////////////////
-
+  const handledelete = async (id) => {
+    const resp = await axios.put(link + `/moteur/updateEtat/${id}`);
+    setInserted(inserted+1);
+  };
   //////////////////////////////////////////////////////
   return (
     <Grid container spacing={2}>
@@ -241,7 +244,7 @@ const InsertMoteur = () => {
                       {f.puissance}
                     </TableCell>
                     <TableCell align={'center'} width={'10%'}>
-                      <IconButton aria-label="delete" style={{ color: theme.palette.warning.dark }}>
+                      <IconButton aria-label="delete" style={{ color: theme.palette.warning.dark }} onClick={() => handledelete(f.id_moteur)}>
                         <IconTrash fontSize="small" />
                       </IconButton>
                     </TableCell>

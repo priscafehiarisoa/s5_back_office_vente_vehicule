@@ -145,6 +145,10 @@ const InsertCategorie = () => {
 
   //////////fonction pour la table//////////////////////
 
+  const handledelete = async (categoryId) => {
+    const resp = await axios.put(link + `/categorie/updateEtat/${categoryId}`);
+  setInserted(inserted+1);
+  };
   //////////////////////////////////////////////////////
   return (
     <Grid container spacing={2}>
@@ -177,7 +181,6 @@ const InsertCategorie = () => {
               required
             />
 
-
             <div>
               <Button
                 variant="contained"
@@ -208,7 +211,7 @@ const InsertCategorie = () => {
               Liste des categories
             </Typography>
           </CardWrapperwarning>
-          <TableContainer sx={{ maxHeight: '80%', minHeight:'59%', margin: '3% 3%' }}>
+          <TableContainer sx={{ maxHeight: '80%', minHeight: '59%', margin: '3% 3%' }}>
             <Table style={{ margin: '2%', width: '95%' }} stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
@@ -226,7 +229,7 @@ const InsertCategorie = () => {
                       {f.nom_categorie}
                     </TableCell>
                     <TableCell align={'center'} width={'10%'}>
-                      <IconButton aria-label="delete" style={{ color: theme.palette.warning.dark }}>
+                      <IconButton aria-label="delete" style={{ color: theme.palette.warning.dark }} onClick={() => handledelete(f.id_categorie)}>
                         <IconTrash fontSize="small" />
                       </IconButton>
                     </TableCell>
@@ -241,7 +244,7 @@ const InsertCategorie = () => {
             </Table>
           </TableContainer>
           <TablePagination
-            style={{marginTop:'8%'}}
+            style={{ marginTop: '8%' }}
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
             count={categorie.length}
