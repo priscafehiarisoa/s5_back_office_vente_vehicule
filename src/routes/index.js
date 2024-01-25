@@ -4,10 +4,10 @@ import { useRoutes } from 'react-router-dom';
 import MainRoutes from './MainRoutes';
 import AuthenticationRoutes from './AuthenticationRoutes';
 import MoteurRoutes from './MoteurRoutes';
-import AnnonceRoutes from "./AnnonceRoutes";
+import AnnonceRoutes from './AnnonceRoutes';
 
 // ==============================|| ROUTING RENDER ||============================== //
 
 export default function ThemeRoutes() {
-  return useRoutes([MainRoutes, AuthenticationRoutes, MoteurRoutes,AnnonceRoutes]);
+  return useRoutes([MainRoutes, AuthenticationRoutes, MoteurRoutes, AnnonceRoutes]);
 }
