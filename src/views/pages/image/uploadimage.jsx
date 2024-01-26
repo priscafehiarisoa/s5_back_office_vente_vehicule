@@ -1,40 +1,57 @@
 import React from 'react';
 import { storage } from '../../../configurationUpload/firebase';
-import { useState, useEffect } from "react";
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  listAll,
-  list,
-} from "firebase/storage";
-import { v4 } from "uuid";
-
+import { useState, useEffect } from 'react';
+import { ref, uploadBytes, getDownloadURL, listAll, list } from 'firebase/storage';
+import { v4 } from 'uuid';
+import axios from 'axios';
+import config from '../../../config';
 
 const Uploadimage = () => {
+  const link = `${config.http}://${config.host}:${config.port}`;
   const [imageUpload, setImageUpload] = useState(null);
   const [imageUrls, setImageUrls] = useState([]);
 
-  const imagesListRef = ref(storage, "images/");
+  const imagesListRef = ref(storage, 'images/');
   const uploadFile = () => {
     if (imageUpload == null) return;
     const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
     uploadBytes(imageRef, imageUpload).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((url) => {
+      getDownloadURL(snapshot.ref).then( (url) => {
         setImageUrls((prev) => [...prev, url]);
+        saveImageUrlToBackend(url); // Send the URL to the backend
       });
     });
   };
 
+
   useEffect(() => {
-    listAll(imagesListRef).then((response) => {
-      response.items.forEach((item) => {
-        getDownloadURL(item).then((url) => {
-          setImageUrls((prev) => [...prev, url]);
-        });
-      });
-    });
+    // Fetch image URLs from the backend
+    fetch(link + '/annonce/getimages')
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.statut === 200 && data.donnee) {
+          setImageUrls(data.donnee);
+        }
+      })
+      .catch((error) => console.error("Error:", error));
   }, []);
+  const [formData, setFormData] = useState({
+    imgUrl: ''
+  });
+
+  const saveImageUrlToBackend = (imageUrl) => {
+    // Make a POST request to your backend to save the image URL
+    fetch(link + '/annonce/image', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ imgUrl: imageUrl }),
+    })
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.error("Error:", error));
+  };
 
   return (
     <div className="App">
@@ -50,8 +67,6 @@ const Uploadimage = () => {
       ))}
     </div>
   );
-
-
 };
 
 export default Uploadimage;
