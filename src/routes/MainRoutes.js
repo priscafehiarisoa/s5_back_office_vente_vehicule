@@ -19,10 +19,11 @@ const MainRoutes = {
     {
       path: '/',
       element: <DashboardDefault />
-    }, {
-      path: '/free',
-      element: <DashboardDefault />
     },
+    // {
+    //   path: '/free',
+    //   element: <DashboardDefault />
+    // },
     {
       path: 'dashboard',
       children: [
