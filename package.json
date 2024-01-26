@@ -16,6 +16,7 @@
     "@tabler/icons": "^1.72.0",
     "apexcharts": "^3.35.3",
     "axios": "^1.6.5",
+    "dotenv": "^16.4.1",
     "formik": "^2.2.9",
     "framer-motion": "^6.3.16",
     "material-ui-popup-state": "^4.0.1",
@@ -30,9 +31,12 @@
     "react-router-dom": "6.3.0",
     "react-scripts": "^5.0.1",
     "redux": "^4.2.0",
+    "webpack": "^5.90.0",
     "yup": "^0.32.11"
   },
-  "scripts": {
+
+
+"scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -62,6 +66,7 @@
   "devDependencies": {
     "@babel/core": "^7.21.4",
     "@babel/eslint-parser": "^7.21.3",
+    "dotenv-webpack": "^8.0.1",
     "eslint": "^8.38.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-config-react-app": "^7.0.1",

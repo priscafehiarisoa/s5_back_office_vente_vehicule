@@ -38,6 +38,7 @@ const InsertMoteur = () => {
   const currentRows = moteur.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
 
   //
+  console.log( ">>"+link)
 
   const [formData, setFormData] = useState({
     nom_moteur: '',
