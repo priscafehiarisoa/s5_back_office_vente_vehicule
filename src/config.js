@@ -16,13 +16,13 @@
 // export default config;
 
 const config = {
-  basename: process.env.BASENAME || '/',
-  defaultPath: process.env.DEFAULT_PATH || '/dashboard/default',
-  fontFamily: process.env.FONT_FAMILY || `'Roboto', sans-serif`,
-  host: process.env.API_HOST || 'localhost',
-  port: process.env.API_PORT || '8080',
-  http: process.env.HTTP || 'http',
-  borderRadius: process.env.BORDER_RADIUS || 12
+  basename: process.env.REACT_APP_BASENAME || '/',
+  defaultPath: process.env.REACT_APP_DEFAULT_PATH || '/dashboard/default',
+  fontFamily: process.env.REACT_APP_FONT_FAMILY ,
+  host: process.env.REACT_APP_API_HOST ,
+  port: process.env.REACT_APP_API_PORT ,
+  http: process.env.REACT_APP_HTTP ,
+  borderRadius: process.env.REACT_APP_BORDER_RADIUS || 12
 };
 
 module.exports = config;
