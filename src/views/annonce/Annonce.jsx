@@ -20,7 +20,7 @@ import StatutsAnnonce from '../../ui-component/annonce/StatutsAnnonce';
 
 const Annonce = () => {
   const theme = useTheme();
-  const link = `${config.http}://${config.host}:${config.port}`;
+  const link = `${config.http}://${config.host}`;
 
   const carData = [
     {

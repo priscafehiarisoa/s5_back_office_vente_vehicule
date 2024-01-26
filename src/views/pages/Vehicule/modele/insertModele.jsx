@@ -27,7 +27,7 @@ import { IconPencil, IconTrash } from '@tabler/icons';
 import TablePagination from '@mui/material/TablePagination';
 
 const InsertModele = () => {
-  const link = `${config.http}://${config.host}:${config.port}`;
+  const link = `${config.http}://${config.host}`;
   const [inserted, setInserted] = useState(0);
   const theme = useTheme();
 
