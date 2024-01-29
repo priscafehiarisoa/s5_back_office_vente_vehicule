@@ -65,6 +65,19 @@ const EarningCard = ({ isLoading }) => {
 
   const [anchorEl, setAnchorEl] = useState(null);
 
+
+  // donnees de connexion + token
+  const [userToken, setUserToken] = useState({});
+  useEffect(() => {
+    setUserToken(localStorage.getItem('adminUserCarSell'));
+  }, []);
+
+  // data momba ny token et tout
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${userToken.token}`
+  };
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -73,11 +86,15 @@ const EarningCard = ({ isLoading }) => {
     setAnchorEl(null);
   };
 
+
   const [totalCommission, setTotalCOmmission] = useState(0);
   useEffect(() => {
     const totalComm = async () => {
       try {
-        const result = await axios.get(link+'/statistiques/totalCommission');
+        const config = {
+          headers: headers
+        };
+        const result = await axios.get(link+'/statistiques/totalCommission',config);
         console.log(JSON.stringify(result.data))
         setTotalCOmmission(result.data.donnee);
       } catch (e) {
@@ -86,6 +103,8 @@ const EarningCard = ({ isLoading }) => {
     };
     totalComm();
   }, []);
+
+
 
   return (
     <>

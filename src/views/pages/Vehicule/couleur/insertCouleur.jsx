@@ -69,7 +69,7 @@ const InsertCouleur = () => {
       const config = {
         headers: headers
       };
-      const resp = await axios.post(link + '/couleur', formData);
+      const resp = await axios.post(link + '/couleur', formData,config);
       setInserted(inserted + 1);
     } catch (e) {
       if (e.isAxiosError) {

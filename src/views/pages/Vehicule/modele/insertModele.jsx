@@ -67,7 +67,10 @@ const InsertModele = () => {
     event.preventDefault();
 
     try {
-      const resp = await axios.post(link + '/modele', formData);
+      const config = {
+        headers: headers
+      };
+      const resp = await axios.post(link + '/modele', formData,config);
       setInserted(inserted + 1);
     } catch (e) {
       if (e.isAxiosError) {

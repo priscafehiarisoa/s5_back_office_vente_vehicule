@@ -28,11 +28,24 @@ const TopNMarques = ({ isLoading }) => {
   const link = `${config.http}://${config.host}`;
   const [anchorEl, setAnchorEl] = useState(null);
   const [topMarque, setTopMarque] = useState([]);
+// donnees de connexion + token
+  const [userToken, setUserToken] = useState({});
+  useEffect(() => {
+    setUserToken(JSON.parse(localStorage.getItem('adminUserCarSell')));
+  }, []);
 
+  // data momba ny token et tout
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${userToken.token}`
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post(link + '/statistiques/classementMarqueVendues', { pages: nombre });
+        const config = {
+          headers: headers
+        };
+        const response = await axios.post(link + '/statistiques/classementMarqueVendues', { pages: nombre },config);
         setTopMarque(response.data.donnee);
       } catch (e) {
         console.log(e);

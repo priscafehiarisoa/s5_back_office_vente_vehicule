@@ -61,10 +61,25 @@ const VenteParMoisEtAnneeChart = ({ isLoading }) => {
   const [selectedYear,setSelectedYear]=useState(new Date().getFullYear())
 
 
+  // donnees de connexion + token
+  const [userToken, setUserToken] = useState({});
+  useEffect(() => {
+    setUserToken(JSON.parse(localStorage.getItem('adminUserCarSell')));
+  }, [selectedYear]);
+  console.log("token "+userToken.token)
+
+  // data momba ny token et tout
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${userToken.token}`
+  };
   useEffect(() => {
     const getDatas = async () => {
       try {
-        const response1 = await axios.post(link + "/statistiques/statistiqueVenteParMois", { annee: selectedYear });
+        const config = {
+          headers: headers
+        };
+        const response1 = await axios.post(link + "/statistiques/statistiqueVenteParMois", { annee: selectedYear },config);
         setDonnee(response1.data.donnee);
       } catch (e) {
         console.log(e);

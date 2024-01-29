@@ -64,9 +64,12 @@ const InsertMoteur = () => {
   }
 
   const handleSubmit = async (event) => {
-    // event.preventDefault();
+    event.preventDefault();
     try {
-      const resp = await axios.post(link + '/moteur', formData);
+      const config = {
+        headers: headers
+      };
+      const resp = await axios.post(link + '/moteur', formData,config);
       setInserted(inserted + 1);
     } catch (e) {
       if (e.isAxiosError) {
