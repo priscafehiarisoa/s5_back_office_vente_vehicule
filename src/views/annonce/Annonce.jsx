@@ -100,6 +100,13 @@ const Annonce = () => {
     const resp = await axios.put(link + `/annonce/validateAnnonce/${id}`,config);
     setInserted(inserted + 1);
   };
+  const handleRefuser = async (id) => {
+    const config = {
+      headers: header
+    };
+    const resp = await axios.put(link + `/annonce/refuserAnnonce/${id}`,config);
+    setInserted(inserted + 1);
+  };
   return (
     <>
       <Grid container spacing={3}>
@@ -167,7 +174,7 @@ const Annonce = () => {
                 backgroundColor:theme.palette.error.light,
                 fontWeight: 'bolder'
 
-              }} onClick={() => handlevalider(cars.id_annonce)}>
+              }} onClick={() => handleRefuser(cars.id_annonce)}>
                 <IconCircleX fontSize="small" />
               </IconButton>
 
