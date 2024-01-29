@@ -3,7 +3,7 @@ import config from '../../../../config';
 import axios from 'axios';
 import {
   Button,
-  Card,
+  Card, Dialog, DialogActions, DialogContent, DialogTitle,
   Grid,
   IconButton,
   Paper,
@@ -144,11 +144,64 @@ const InsertCouleur = () => {
   });
 
   //////////fonction pour la table//////////////////////
+
   const handledelete = async (id) => {
     const resp = await axios.put(link + `/couleur/updateEtat/${id}`);
     setInserted(inserted+1);
   };
   //////////////////////////////////////////////////////
+  const [editedName, setEditedName] = useState(null);
+  const [editedValue, setEditedValue] = useState('');
+  const [editedId, setEditedId] = useState(null);
+
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+  const handleUpdate = async () => {
+    try {
+      await axios.put(`${link}/couleur/${editedId}`, { nom_couleur: editedValue });
+      console.log(editedId);
+      setInserted(inserted + 1);
+      handleCloseDialog();
+    } catch (error) {
+      console.error('Error updating couleur:', error);
+    }
+  };
+
+  const dialogContent = (
+    <div>
+      <TextField
+        id="edit-name"
+        label="Nom de la catégorie"
+        variant="outlined"
+        value={editedValue}
+        onChange={(e) => setEditedValue(e.target.value)}
+        fullWidth
+        margin="normal"
+      />
+    </div>
+  );
+
+  const dialogActions = (
+    <div>
+      <Button onClick={handleCloseDialog} color="secondary">
+        Annuler
+      </Button>
+      <Button onClick={handleUpdate} color="primary">
+        Sauvegarder
+      </Button>
+    </div>
+  );
+
+
+
+  /////////////////////////////////
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sm={5} m={0}>
@@ -163,6 +216,11 @@ const InsertCouleur = () => {
             paddingBottom: '2%'
           }}
         >
+          <Dialog open={openDialog} onClose={handleCloseDialog}>
+            <DialogTitle>Modifier la couleur</DialogTitle>
+            <DialogContent>{dialogContent}</DialogContent>
+            <DialogActions>{dialogActions}</DialogActions>
+          </Dialog>
           <CardWrapper>
             <Typography variant="h4" color={theme.palette.grey.A700}>
               Inserer une nouvelle couleur
@@ -233,9 +291,18 @@ const InsertCouleur = () => {
                       </IconButton>
                     </TableCell>
                     <TableCell align={'center'} width={'10%'}>
-                      <IconButton aria-label="modify" style={{ color: theme.palette.secondary.dark }}>
+                      <IconButton
+                        aria-label="modify"
+                        style={{ color: theme.palette.secondary.dark }}
+                        onClick={() => {
+                          setEditedId(f.id_couleur);
+                          setEditedValue(f.nom_couleur);
+                          handleOpenDialog();
+                        }}
+                      >
                         <IconPencil fontSize="small" />
                       </IconButton>
+
                     </TableCell>
                   </TableRow>
                 ))}

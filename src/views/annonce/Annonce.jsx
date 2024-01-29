@@ -11,7 +11,7 @@ import {
   capitalize,
   Grid,
 } from '@mui/material';
-import { IconClipboardHeart, IconHeart, IconHeartOff, IconHeartPlus, IconInfoCircle } from '@tabler/icons';
+import { IconClipboardHeart, IconHeart, IconHeartOff, IconHeartPlus, IconInfoCircle, IconTrash } from '@tabler/icons';
 import { useTheme } from '@mui/material/styles';
 import config from '../../config';
 import axios from 'axios';
@@ -54,12 +54,13 @@ const Annonce = () => {
   ];
 
   const [image, setImage] = useState('/images/1-porsche-911-gt3-2021-rt-hero-front.jpg');
+  const [inserted, setInserted] = useState(0);
 
   const [annonces, setAnnonces] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(link + '/annonce/getAnnoncesValidees');
+      const response = await axios.get(link + '/annonce/getAnnoncesEnCoursDeValidation');
       setAnnonces(response.data.donnee);
     };
     fetchData();
@@ -75,6 +76,10 @@ const Annonce = () => {
     console.log(id);
   }
 
+  const handlevalider = async (id) => {
+    const resp = await axios.put(link + `/annonce/validateAnnonce/${id}`);
+    setInserted(inserted+1);
+  };
   return (
     <>
       <Grid container spacing={3}>
@@ -177,6 +182,9 @@ const Annonce = () => {
                     </Typography>
                   </Grid>
                 </Grid>
+                <IconButton aria-label="delete" style={{ color: theme.palette.warning.dark }} onClick={() => handlevalider(cars.id_annonce)}>
+                  <IconTrash fontSize="small" />
+                </IconButton>
               </CardContent>
             </Card>
         ))}

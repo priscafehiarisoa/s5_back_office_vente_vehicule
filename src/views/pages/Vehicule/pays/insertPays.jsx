@@ -3,7 +3,7 @@ import config from '../../../../config';
 import axios from 'axios';
 import {
   Button,
-  Card,
+  Card, Dialog, DialogActions, DialogContent, DialogTitle,
   Grid,
   IconButton,
   Paper,
@@ -149,6 +149,58 @@ const InsertPays = () => {
     setInserted(inserted+1);
   };
   //////////////////////////////////////////////////////
+  const [editedName, setEditedName] = useState(null);
+  const [editedValue, setEditedValue] = useState('');
+  const [editedId, setEditedId] = useState(null);
+
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+  const handleUpdate = async () => {
+    try {
+      await axios.put(`${link}/pays/${editedId}`, { nom_pays: editedValue });
+      console.log(editedId);
+      setInserted(inserted + 1);
+      handleCloseDialog();
+    } catch (error) {
+      console.error('Error updating pays:', error);
+    }
+  };
+
+  const dialogContent = (
+    <div>
+      <TextField
+        id="edit-name"
+        label="Nom de la catégorie"
+        variant="outlined"
+        value={editedValue}
+        onChange={(e) => setEditedValue(e.target.value)}
+        fullWidth
+        margin="normal"
+      />
+    </div>
+  );
+
+  const dialogActions = (
+    <div>
+      <Button onClick={handleCloseDialog} color="secondary">
+        Annuler
+      </Button>
+      <Button onClick={handleUpdate} color="primary">
+        Sauvegarder
+      </Button>
+    </div>
+  );
+
+
+
+  /////////////////////////////////
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sm={5} m={0}>
@@ -206,6 +258,11 @@ const InsertPays = () => {
             alignItems: 'center'
           }}
         >
+          <Dialog open={openDialog} onClose={handleCloseDialog}>
+            <DialogTitle>Modifier le pays</DialogTitle>
+            <DialogContent>{dialogContent}</DialogContent>
+            <DialogActions>{dialogActions}</DialogActions>
+          </Dialog>
           <CardWrapperwarning>
             <Typography variant="h4" color={theme.palette.grey.A700}>
               Liste des pays
@@ -234,9 +291,18 @@ const InsertPays = () => {
                       </IconButton>
                     </TableCell>
                     <TableCell align={'center'} width={'10%'}>
-                      <IconButton aria-label="modify" style={{ color: theme.palette.secondary.dark }}>
+                      <IconButton
+                        aria-label="modify"
+                        style={{ color: theme.palette.secondary.dark }}
+                        onClick={() => {
+                          setEditedId(f.id_pays);
+                          setEditedValue(f.nom_pays);
+                          handleOpenDialog();
+                        }}
+                      >
                         <IconPencil fontSize="small" />
                       </IconButton>
+
                     </TableCell>
                   </TableRow>
                 ))}

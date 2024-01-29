@@ -14,7 +14,8 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Typography
+  Typography,
+  Dialog, DialogTitle, DialogContent, DialogActions
 } from '@mui/material';
 import { maxWidth } from '@mui/system';
 import { useTheme, styled } from '@mui/material/styles';
@@ -150,6 +151,58 @@ const InsertCategorie = () => {
   setInserted(inserted+1);
   };
   //////////////////////////////////////////////////////
+  const [editedCategoryName, setEditedCategoryName] = useState(null);
+  const [editedCategoryValue, setEditedCategoryValue] = useState('');
+  const [editedCategoryId, setEditedCategoryId] = useState(null);
+
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+  const handleUpdate = async () => {
+    try {
+      await axios.put(`${link}/categorie/${editedCategoryId}`, { nom_categorie: editedCategoryValue });
+      console.log(editedCategoryId);
+      setInserted(inserted + 1);
+      handleCloseDialog();
+    } catch (error) {
+      console.error('Error updating category:', error);
+    }
+  };
+
+  const dialogContent = (
+    <div>
+      <TextField
+        id="edit-category-name"
+        label="Nom de la catégorie"
+        variant="outlined"
+        value={editedCategoryValue}
+        onChange={(e) => setEditedCategoryValue(e.target.value)}
+        fullWidth
+        margin="normal"
+      />
+    </div>
+  );
+
+  const dialogActions = (
+    <div>
+      <Button onClick={handleCloseDialog} color="secondary">
+        Annuler
+      </Button>
+      <Button onClick={handleUpdate} color="primary">
+        Sauvegarder
+      </Button>
+    </div>
+  );
+
+
+
+  /////////////////////////////////
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sm={5} m={0}>
@@ -164,6 +217,12 @@ const InsertCategorie = () => {
             paddingBottom: '2%'
           }}
         >
+          <Dialog open={openDialog} onClose={handleCloseDialog}>
+            <DialogTitle>Modifier la catégorie</DialogTitle>
+            <DialogContent>{dialogContent}</DialogContent>
+            <DialogActions>{dialogActions}</DialogActions>
+          </Dialog>
+
           <CardWrapper>
             <Typography variant="h4" color={theme.palette.grey.A700}>
               Inserer une nouvelle categorie
@@ -234,9 +293,18 @@ const InsertCategorie = () => {
                       </IconButton>
                     </TableCell>
                     <TableCell align={'center'} width={'10%'}>
-                      <IconButton aria-label="modify" style={{ color: theme.palette.secondary.dark }}>
+                      <IconButton
+                        aria-label="modify"
+                        style={{ color: theme.palette.secondary.dark }}
+                        onClick={() => {
+                          setEditedCategoryId(f.id_categorie);
+                          setEditedCategoryValue(f.nom_categorie);
+                          handleOpenDialog();
+                        }}
+                      >
                         <IconPencil fontSize="small" />
                       </IconButton>
+
                     </TableCell>
                   </TableRow>
                 ))}

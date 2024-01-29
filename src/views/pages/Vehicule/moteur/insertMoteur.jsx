@@ -3,7 +3,7 @@ import config from '../../../../config';
 import axios from 'axios';
 import {
   Button,
-  Card,
+  Card, Dialog, DialogActions, DialogContent, DialogTitle,
   Grid,
   IconButton,
   Paper,
@@ -151,6 +151,72 @@ const InsertMoteur = () => {
     setInserted(inserted+1);
   };
   //////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////
+  const [editedName, setEditedName] = useState(null);
+  const [editedValue, setEditedValue] = useState('');
+  const [editedId, setEditedId] = useState('');
+  const [editedPuissance, setEditedPuissance] = useState(null);
+
+
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+  const handleUpdate = async () => {
+    try {
+      await axios.put(`${link}/moteur/${editedId}`, { nom_moteur: editedValue, puissance: editedPuissance });
+      console.log(editedId);
+      setInserted(inserted + 1);
+      handleCloseDialog();
+    } catch (error) {
+      console.error('Error updating moteur:', error);
+    }
+  };
+
+  const dialogContent = (
+    <div>
+      <TextField
+        id="edit-name"
+        label="Nom du moteur"
+        variant="outlined"
+        value={editedValue}
+        onChange={(e) => setEditedValue(e.target.value)}
+        fullWidth
+        margin="normal"
+      />
+
+      <TextField
+        id="edit-puissance"
+        label="Puissance du moteur"
+        variant="outlined"
+        value={editedPuissance}
+        onChange={(e) => setEditedPuissance(e.target.value)}
+        fullWidth
+        margin="normal"
+      />
+
+    </div>
+  );
+
+  const dialogActions = (
+    <div>
+      <Button onClick={handleCloseDialog} color="secondary">
+        Annuler
+      </Button>
+      <Button onClick={handleUpdate} color="primary">
+        Sauvegarder
+      </Button>
+    </div>
+  );
+
+
+
+  /////////////////////////////////
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sm={5} m={0}>
@@ -165,6 +231,11 @@ const InsertMoteur = () => {
             paddingBottom: '2%'
           }}
         >
+          <Dialog open={openDialog} onClose={handleCloseDialog}>
+            <DialogTitle>Modifier le moteur</DialogTitle>
+            <DialogContent>{dialogContent}</DialogContent>
+            <DialogActions>{dialogActions}</DialogActions>
+          </Dialog>
           <CardWrapper>
             <Typography variant="h4" color={theme.palette.grey.A700}>
               Inserer un nouveau moteur
@@ -250,9 +321,19 @@ const InsertMoteur = () => {
                       </IconButton>
                     </TableCell>
                     <TableCell align={'center'} width={'10%'}>
-                      <IconButton aria-label="modify" style={{ color: theme.palette.secondary.dark }}>
+                      <IconButton
+                        aria-label="modify"
+                        style={{ color: theme.palette.secondary.dark }}
+                        onClick={() => {
+                          setEditedId(f.id_moteur);
+                          setEditedValue(f.nom_moteur);
+                          setEditedPuissance(f.puissance);
+                          handleOpenDialog();
+                        }}
+                      >
                         <IconPencil fontSize="small" />
                       </IconButton>
+
                     </TableCell>
                   </TableRow>
                 ))}

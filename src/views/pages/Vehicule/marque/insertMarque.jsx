@@ -3,7 +3,7 @@ import config from '../../../../config';
 import axios from 'axios';
 import {
   Button,
-  Card,
+  Card, Dialog, DialogActions, DialogContent, DialogTitle,
   Grid,
   IconButton,
   Paper,
@@ -149,6 +149,58 @@ const InsertMarque = () => {
     setInserted(inserted+1);
   };
   //////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////
+  const [editedName, setEditedName] = useState(null);
+  const [editedValue, setEditedValue] = useState('');
+  const [editedId, setEditedId] = useState(null);
+
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+  const handleUpdate = async () => {
+    try {
+      await axios.put(`${link}/marque/${editedId}`, { nom_marque: editedValue });
+      console.log(editedId);
+      setInserted(inserted + 1);
+      handleCloseDialog();
+    } catch (error) {
+      console.error('Error updating marque:', error);
+    }
+  };
+
+  const dialogContent = (
+    <div>
+      <TextField
+        id="edit-name"
+        label="Nom de la catégorie"
+        variant="outlined"
+        value={editedValue}
+        onChange={(e) => setEditedValue(e.target.value)}
+        fullWidth
+        margin="normal"
+      />
+    </div>
+  );
+
+  const dialogActions = (
+    <div>
+      <Button onClick={handleCloseDialog} color="secondary">
+        Annuler
+      </Button>
+      <Button onClick={handleUpdate} color="primary">
+        Sauvegarder
+      </Button>
+    </div>
+  );
+
+
+///////////////////////
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sm={5} m={0}>
@@ -163,6 +215,11 @@ const InsertMarque = () => {
             paddingBottom: '2%'
           }}
         >
+          <Dialog open={openDialog} onClose={handleCloseDialog}>
+            <DialogTitle>Modifier la marque</DialogTitle>
+            <DialogContent>{dialogContent}</DialogContent>
+            <DialogActions>{dialogActions}</DialogActions>
+          </Dialog>
           <CardWrapper>
             <Typography variant="h4" color={theme.palette.grey.A700}>
               Inserer une nouvelle marque
@@ -232,11 +289,20 @@ const InsertMarque = () => {
                         <IconTrash fontSize="small" />
                       </IconButton>
                     </TableCell>
-                    <TableCell align={'center'} width={'10%'}>
-                      <IconButton aria-label="modify" style={{ color: theme.palette.secondary.dark }}>
-                        <IconPencil fontSize="small" />
-                      </IconButton>
-                    </TableCell>
+                      <TableCell align={'center'} width={'10%'}>
+                        <IconButton
+                          aria-label="modify"
+                          style={{ color: theme.palette.secondary.dark }}
+                          onClick={() => {
+                            setEditedId(f.id_marque);
+                            setEditedValue(f.nom_marque);
+                            handleOpenDialog();
+                          }}
+                        >
+                          <IconPencil fontSize="small" />
+                        </IconButton>
+
+                      </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

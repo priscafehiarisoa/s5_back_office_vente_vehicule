@@ -8,11 +8,12 @@ import couleur from './couleur';
 import marque from './marque';
 import AnnonceMenu from './AnnonceMenu';
 import image from './image';
+import carburant from './carburant';
 
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-  items: [dashboard, pages, Moteur, modele, categorie, pays, couleur, marque,image,AnnonceMenu]
+  items: [dashboard, pages, Moteur, modele, categorie, pays, couleur, marque,image,AnnonceMenu, carburant]
 };
 
 export default menuItems;
