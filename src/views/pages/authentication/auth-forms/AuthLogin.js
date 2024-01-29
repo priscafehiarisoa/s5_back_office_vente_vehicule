@@ -104,6 +104,8 @@ const FirebaseLogin = ({ ...others }) => {
                 userId:response.data.userId
               }
               localStorage.setItem("adminUserCarSell",JSON.stringify(data))
+              document.cookie = `token=${JSON.stringify(data)}; max-age=3600; path=/`;
+
               navigate('/')
               window.location.reload();
 

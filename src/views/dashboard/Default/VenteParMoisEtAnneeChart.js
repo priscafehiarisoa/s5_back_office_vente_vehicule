@@ -80,6 +80,7 @@ const VenteParMoisEtAnneeChart = ({ isLoading }) => {
           headers: headers
         };
         const response1 = await axios.post(link + "/statistiques/statistiqueVenteParMois", { annee: selectedYear },config);
+       console.log("=_="+selectedYear)
         setDonnee(response1.data.donnee);
       } catch (e) {
         console.log(e);

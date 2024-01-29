@@ -154,38 +154,48 @@ const CommissionParMoisEtAnnee = ({ isLoading }) => {
     setYears(generateYears());
   }, []);
   const link = `${config.http}://${config.host}`;
-
-  // donnees de connexion + token
-  const [userToken, setUserToken] = useState({});
-  useEffect(() => {
-    setUserToken(JSON.parse(localStorage.getItem('adminUserCarSell')));
-  }, [selectedYears]);
-  console.log("token "+userToken.token)
-
-  // data momba ny token et tout
-  const headers = {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${userToken.token}`
-  };
   const [totalCommission,setTotalCommission]=useState(0)
   console.log(selectedYears+" "+selectedMonth)
-
+  const [userToken, setUserToken] = useState({});
 
   useEffect(() => {
-    const getCommissions = async ()=>{
-      const json={mois:
-        selectedMonth,
-        annee:selectedYears
-      }
+    const getjson=async ()=>{
+      console.log("leo "+JSON.stringify(localStorage.getItem('adminUserCarSell')))
+      const token = await JSON.parse(localStorage.getItem('adminUserCarSell'));
+      setUserToken(token || {});
+    }
+    getjson()
+  }, []);
+
+  const storedToken = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
+  console.log("stored ", storedToken.token)
+  useEffect(() => {
+    const getCommissions = async () => {
+      const json = {
+        mois: selectedMonth,
+        annee: selectedYears
+      };
+
+      const headers = {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userToken.token}`
+      };
+
       const config = {
         headers: headers
       };
-      const result = await axios.post(link+"/statistiques/totalCommissionMoisAnnee",json,config)
-      setTotalCommission(result.data.donnee)
-      console.log("ty "+result.data.donnee)
-    }
-    getCommissions()
-  }, [selectedMonth,selectedYears]);
+
+      try {
+        const result = await axios.post(link + "/statistiques/totalCommissionMoisAnnee", json, config);
+        setTotalCommission(result.data.donnee);
+        console.log("ty " + result.data.donnee);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getCommissions();
+  }, [selectedMonth, selectedYears, userToken]);
   return (
     <>
       {isLoading ? (
