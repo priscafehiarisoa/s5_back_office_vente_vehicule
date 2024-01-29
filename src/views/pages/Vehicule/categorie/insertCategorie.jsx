@@ -21,6 +21,7 @@ import { useTheme, styled } from '@mui/material/styles';
 import MainCard from 'ui-component/cards/MainCard';
 import { IconPencil, IconTrash } from '@tabler/icons';
 import TablePagination from '@mui/material/TablePagination';
+import ErrorAlert from "../../../../ui-component/alert/ErrorAlert";
 
 const InsertCategorie = () => {
   const link = `${config.http}://${config.host}`;
@@ -36,19 +37,45 @@ const InsertCategorie = () => {
   const indexOfLastRow = (page + 1) * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   const currentRows = categorie.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
+  const [error, setError] = useState(null);
 
   //
 
   const [formData, setFormData] = useState({
     nom_categorie: ''
   });
+  // donnees de connexion + token
+  const [userToken, setUserToken] = useState({});
+  useEffect(() => {
+    setUserToken(JSON.parse(localStorage.getItem('adminUserCarSell')));
+  }, []);
 
-  const handleSubmit = async () => {
+  // data momba ny token et tout
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${userToken.token}`
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     try {
-      const resp = await axios.post(link + '/categorie', formData);
+      const config = {
+        headers: headers
+      };
+      const resp = await axios.post(link + '/categorie', formData, config);
+      console.log('response : ' + JSON.stringify(resp.data));
       setInserted(inserted + 1);
-    } catch (e) {
-      console.log(e);
+    } catch (err) {
+      if (err.isAxiosError) {
+        if (err.code === 'ERR_NETWORK') {
+          setError('une erreur est survenue');
+        }
+      } else {
+        // Non-Axios error
+        console.error('Non-Axios Error:', err.message);
+        setError('une erreur est survenue');
+
+      }
     }
   };
 
@@ -147,7 +174,7 @@ const InsertCategorie = () => {
 
   const handledelete = async (categoryId) => {
     const resp = await axios.put(link + `/categorie/updateEtat/${categoryId}`);
-  setInserted(inserted+1);
+    setInserted(inserted + 1);
   };
   //////////////////////////////////////////////////////
   return (
@@ -178,8 +205,13 @@ const InsertCategorie = () => {
               fullWidth
               name="nom_categorie"
               onChange={(e) => setFormData({ ...formData, nom_categorie: e.target.value })}
+              error={error}
               required
             />
+            <div style={{margin:"0 10%"}}>
+              {error && <ErrorAlert message={error} ></ErrorAlert>}
+            </div>
+
 
             <div>
               <Button
@@ -229,7 +261,11 @@ const InsertCategorie = () => {
                       {f.nom_categorie}
                     </TableCell>
                     <TableCell align={'center'} width={'10%'}>
-                      <IconButton aria-label="delete" style={{ color: theme.palette.warning.dark }} onClick={() => handledelete(f.id_categorie)}>
+                      <IconButton
+                        aria-label="delete"
+                        style={{ color: theme.palette.warning.dark }}
+                        onClick={() => handledelete(f.id_categorie)}
+                      >
                         <IconTrash fontSize="small" />
                       </IconButton>
                     </TableCell>

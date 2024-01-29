@@ -21,6 +21,7 @@ import { useTheme, styled } from '@mui/material/styles';
 import MainCard from 'ui-component/cards/MainCard';
 import { IconPencil, IconTrash } from '@tabler/icons';
 import TablePagination from '@mui/material/TablePagination';
+import ErrorAlert from "../../../../ui-component/alert/ErrorAlert";
 
 const InsertMoteur = () => {
   const link = `${config.http}://${config.host}`;
@@ -36,6 +37,7 @@ const InsertMoteur = () => {
   const indexOfLastRow = (page + 1) * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   const currentRows = moteur.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
+  const [error, setError] = useState(null);
 
   //
   console.log( ">>"+link)
@@ -45,12 +47,38 @@ const InsertMoteur = () => {
     puissance: ''
   });
 
-  const handleSubmit = async () => {
+  // donnees de connexion + token
+  const [userToken, setUserToken] = useState({});
+  useEffect(() => {
+    setUserToken(JSON.parse(localStorage.getItem('adminUserCarSell')));
+  }, []);
+
+  // data momba ny token et tout
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${userToken.token}`
+  };
+  const handleSeReconnecter=()=>{
+    localStorage.removeItem("adminUserCarSell")
+    window.location.reload()
+  }
+
+  const handleSubmit = async (event) => {
+    // event.preventDefault();
     try {
       const resp = await axios.post(link + '/moteur', formData);
       setInserted(inserted + 1);
     } catch (e) {
-      console.log(e);
+      if (e.isAxiosError) {
+        if (e.code === 'ERR_NETWORK') {
+          setError('une erreur est survenue , vous ne pouvez pas acceder à cette fonctionalité');
+        }
+      } else {
+        // Non-Axios error
+        console.error('Non-Axios Error:', err.message);
+        setError('une erreur est survenue , vous ne pouvez pas acceder à cette fonctionalité');
+
+      }
     }
   };
 
@@ -191,6 +219,9 @@ const InsertMoteur = () => {
               onChange={(e) => setFormData({ ...formData, puissance: e.target.value })}
               required
             />
+            <div style={{margin:"0 10%"}}>
+              {error && <ErrorAlert message={error } ></ErrorAlert>}
+            </div>
             <div>
               <Button
                 variant="contained"

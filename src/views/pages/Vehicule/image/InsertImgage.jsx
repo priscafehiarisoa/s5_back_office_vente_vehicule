@@ -5,7 +5,9 @@ const InsertImgage = () => {
     const selectedImage = event.target.files[0];
     setFormData({ ...formData, selectedImage });
   };
-  const handleSubmit = async () => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
     const formData = new FormData();
     formData.append('image', selectedImage);
 
