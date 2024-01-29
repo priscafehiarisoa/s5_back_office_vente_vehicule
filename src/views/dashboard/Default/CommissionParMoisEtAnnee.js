@@ -186,7 +186,7 @@ const CommissionParMoisEtAnnee = ({ isLoading }) => {
       };
 
       try {
-        const result = await axios.post(link + "/statistiques/totalCommissionMoisAnnee", json, config);
+        const result = await axios.post(link + "/statistiques/totalCommissionMoisAnnee", json);
         setTotalCommission(result.data.donnee);
         console.log("ty " + result.data.donnee);
       } catch (error) {

@@ -65,12 +65,13 @@ const EarningCard = ({ isLoading }) => {
 
   const [anchorEl, setAnchorEl] = useState(null);
 
+  const [item,setItem]=useState(0)
 
   // donnees de connexion + token
   const [userToken, setUserToken] = useState({});
   useEffect(() => {
-    setUserToken(localStorage.getItem('adminUserCarSell'));
-  }, []);
+    setUserToken(JSON.parse(localStorage.getItem('adminUserCarSell')));
+  }, [item]);
 
   // data momba ny token et tout
   const headers = {
@@ -94,9 +95,10 @@ const EarningCard = ({ isLoading }) => {
         const config = {
           headers: headers
         };
-        const result = await axios.get(link+'/statistiques/totalCommission',config);
+        const result = await axios.get(link+'/statistiques/totalCommission');
         console.log(JSON.stringify(result.data))
         setTotalCOmmission(result.data.donnee);
+        setItem(item+1)
       } catch (e) {
         console.log(e);
       }

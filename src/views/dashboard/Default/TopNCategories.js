@@ -47,7 +47,7 @@ const TopNCategories = ({ isLoading }) => {
         const config = {
           headers: headers
         };
-        const response = await axios.post(link + '/statistiques/classementCategorieVendues', { pages: nombre },config);
+        const response = await axios.post(link + '/statistiques/classementCategorieVendues', { pages: nombre });
         setTopMarque(response.data.donnee);
       } catch (e) {
         console.log(e);

@@ -49,7 +49,7 @@ const TotalIncomeDarkCard = ({ isLoading }) => {
   const [nombre,setNombre]=useState(0)
   const [nombreJours,setnombrejours]=useState(10)
   const link = `${config.http}://${config.host}`;
-
+  //
   // useEffect(() => {
   //   const fetchData= async ()=>{
   //     const result= await axios.get(link+`/nombreAnnoncesVendues/${nombreJours}`)
