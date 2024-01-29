@@ -87,7 +87,7 @@ const VenteParMarqueChart = ({ isLoading }) => {
         const config = {
           headers: headers
         };
-        const response = await axios.post(link + "/statistiques/statistiqueVenteParMarque", { marque: selectedMarque, annee: selectedYear },config);
+        const response = await axios.post(link + "/statistiques/statistiqueVenteParMarque", { marque: selectedMarque, annee: selectedYear });
         setDonnee(response.data.donnee);
       } catch (e) {
         console.log(e);
