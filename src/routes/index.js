@@ -10,9 +10,10 @@ import PaysRoutes from './PaysRoutes';
 import CouleurRoutes from './CouleurRoutes';
 import MarqueRoutes from './MarqueRoutes';
 import AnnonceRoutes from './AnnonceRoutes';
+import AuthRoutes from "./AuthRoutes";
 
 // ==============================|| ROUTING RENDER ||============================== //
 
 export default function ThemeRoutes() {
-  return useRoutes([MainRoutes, AuthenticationRoutes, MoteurRoutes, ModeleRoutes, CategorieRoutes, PaysRoutes, CouleurRoutes, MarqueRoutes, AnnonceRoutes]);
+  return useRoutes([MainRoutes, AuthenticationRoutes, MoteurRoutes, ModeleRoutes, CategorieRoutes, PaysRoutes, CouleurRoutes, MarqueRoutes, AnnonceRoutes,AuthRoutes]);
 }

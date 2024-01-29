@@ -10,6 +10,7 @@ import AuthCardWrapper from '../AuthCardWrapper';
 import AuthLogin from '../auth-forms/AuthLogin';
 import Logo from '../../../../ui-component/Logo';
 import AuthFooter from '../../../../ui-component/cards/AuthFooter';
+import {useEffect, useState} from "react";
 
 // assets
 
@@ -18,6 +19,23 @@ import AuthFooter from '../../../../ui-component/cards/AuthFooter';
 const Login = () => {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
+  const [greeting, setGreeting] = useState('');
+
+  useEffect(() => {
+    const getGreeting = () => {
+      const currentHour = new Date().getHours();
+
+      if (currentHour >= 5 && currentHour < 12) {
+        setGreeting('Bonjour');
+      } else if (currentHour >= 12 && currentHour < 18) {
+        setGreeting('Bonne après-midi');
+      } else {
+        setGreeting('Bonsoir');
+      }
+    };
+
+    getGreeting();
+  }, []); // Empty dependency array to run the effect only once on component mount
 
   return (
     <AuthWrapper1>
@@ -37,10 +55,10 @@ const Login = () => {
                       <Grid item>
                         <Stack alignItems="center" justifyContent="center" spacing={1}>
                           <Typography color={theme.palette.secondary.main} gutterBottom variant={matchDownSM ? 'h3' : 'h2'}>
-                            Hi, Welcome Back
+                            {greeting}, Admin
                           </Typography>
                           <Typography variant="caption" fontSize="16px" textAlign={matchDownSM ? 'center' : 'inherit'}>
-                            Enter your credentials to continue
+                            Bon retour parmis nous 😁
                           </Typography>
                         </Stack>
                       </Grid>
@@ -55,7 +73,7 @@ const Login = () => {
                   <Grid item xs={12}>
                     <Grid item container direction="column" alignItems="center" xs={12}>
                       <Typography component={Link} to="/pages/register/register3" variant="subtitle1" sx={{ textDecoration: 'none' }}>
-                        Don&apos;t have an account?
+                        Si vous n&apos;avez pas de compte veuillez télécharger l&apos;application mobile et vous inscrire, Merci
                       </Typography>
                     </Grid>
                   </Grid>
