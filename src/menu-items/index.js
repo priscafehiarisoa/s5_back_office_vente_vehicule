@@ -7,13 +7,12 @@ import pays from './pays';
 import couleur from './couleur';
 import marque from './marque';
 import AnnonceMenu from './AnnonceMenu';
-import image from './image';
-import carburant from './carburant';
+import vehiculeMenu from "./VehiculeMenu";
 
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-  items: [dashboard, pages, Moteur, modele, categorie, pays, couleur, marque,image,AnnonceMenu, carburant]
+  items: [dashboard, vehiculeMenu,  AnnonceMenu]
 };
 
 export default menuItems;

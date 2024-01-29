@@ -21,6 +21,7 @@ import { useTheme, styled } from '@mui/material/styles';
 import MainCard from 'ui-component/cards/MainCard';
 import { IconPencil, IconTrash } from '@tabler/icons';
 import TablePagination from '@mui/material/TablePagination';
+import ErrorAlert from "../../../../ui-component/alert/ErrorAlert";
 
 const InsertCouleur = () => {
   const link = `${config.http}://${config.host}`;
@@ -36,6 +37,7 @@ const InsertCouleur = () => {
   const indexOfLastRow = (page + 1) * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   const currentRows = couleur.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
+  const [error, setError] = useState(null);
 
   //
 
@@ -43,26 +45,60 @@ const InsertCouleur = () => {
     nom_couleur: ''
   });
 
-  const handleSubmit = async () => {
+  // donnees de connexion + token
+  const [userToken, setUserToken] = useState({});
+  useEffect(() => {
+    setUserToken(JSON.parse(localStorage.getItem('adminUserCarSell')));
+  }, []);
+
+  // data momba ny token et tout
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${userToken.token}`
+  };
+
+  const handleSeReconnecter=()=>{
+    localStorage.removeItem("adminUserCarSell")
+    window.location.reload()
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
     try {
-      const resp = await axios.post(link + '/couleur', formData);
+      const config = {
+        headers: headers
+      };
+      const resp = await axios.post(link + '/couleur', formData,config);
       setInserted(inserted + 1);
     } catch (e) {
-      console.log(e);
+      if (e.isAxiosError) {
+        if (e.code === 'ERR_NETWORK') {
+          setError('une erreur est survenue , vous ne pouvez pas acceder à cette fonctionalité');
+        }
+      } else {
+        // Non-Axios error
+        console.error('Non-Axios Error:', err.message);
+        setError('une erreur est survenue , vous ne pouvez pas acceder à cette fonctionalité');
+      }
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const fo = await axios.get(link + '/couleur');
-        setCouleur(fo.data.donnee);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    fetchData();
-  }, [inserted]);
+  useEffect(
+    (event) => {
+
+      const fetchData = async () => {
+        try {
+          const fo = await axios.get(link + '/couleur');
+          setCouleur(fo.data.donnee);
+        } catch (e) {
+          console.log(e);
+        }
+      };
+      fetchData();
+    },
+    [inserted]
+  );
 
   const CardWrapper = styled(MainCard)(({ theme }) => ({
     position: 'relative',
@@ -147,7 +183,7 @@ const InsertCouleur = () => {
 
   const handledelete = async (id) => {
     const resp = await axios.put(link + `/couleur/updateEtat/${id}`);
-    setInserted(inserted+1);
+    setInserted(inserted + 1);
   };
   //////////////////////////////////////////////////////
   const [editedName, setEditedName] = useState(null);
@@ -234,10 +270,23 @@ const InsertCouleur = () => {
               style={{ flexGrow: 1, width: '80%', margin: '3% 10%' }}
               fullWidth
               name="nom_couleur"
+              error={error}
               onChange={(e) => setFormData({ ...formData, nom_couleur: e.target.value })}
               required
             />
+            <div style={{margin:"0 10%"}}>
+              {error && <><ErrorAlert message={error } ></ErrorAlert>
+              <Button
+                  onClick={handleSubmit}
+                  style={{  }}
+              >
+                se reconnecter
+              </Button>
+              </>
+              }
 
+
+            </div>
 
             <div>
               <Button
@@ -269,12 +318,13 @@ const InsertCouleur = () => {
               Liste des couleurs
             </Typography>
           </CardWrapperwarning>
-          <TableContainer sx={{ maxHeight: '80%', minHeight:'59%', margin: '3% 3%' }}>
+          <TableContainer sx={{ maxHeight: '80%', minHeight: '59%', margin: '3% 3%' }}>
             <Table style={{ margin: '2%', width: '95%' }} stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
                   <TableCell style={{ backgroundColor: theme.palette.secondary.light }} align={'center'}>
-                    couleur                  </TableCell>
+                    couleur{' '}
+                  </TableCell>
                   <TableCell style={{ backgroundColor: theme.palette.secondary.light }} align={'center'}></TableCell>
                   <TableCell style={{ backgroundColor: theme.palette.secondary.light }} align={'center'}></TableCell>
                 </TableRow>
@@ -286,7 +336,11 @@ const InsertCouleur = () => {
                       {f.nom_couleur}
                     </TableCell>
                     <TableCell align={'center'} width={'10%'}>
-                      <IconButton aria-label="delete" style={{ color: theme.palette.warning.dark }} onClick={() => handledelete(f.id_couleur)}>
+                      <IconButton
+                        aria-label="delete"
+                        style={{ color: theme.palette.warning.dark }}
+                        onClick={() => handledelete(f.id_couleur)}
+                      >
                         <IconTrash fontSize="small" />
                       </IconButton>
                     </TableCell>
@@ -310,7 +364,7 @@ const InsertCouleur = () => {
             </Table>
           </TableContainer>
           <TablePagination
-            style={{marginTop:'8%'}}
+            style={{ marginTop: '8%' }}
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
             count={couleur.length}

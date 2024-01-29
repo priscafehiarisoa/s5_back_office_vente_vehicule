@@ -29,9 +29,24 @@ const TopNCategories = ({ isLoading }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [topMarque, setTopMarque] = useState([]);
 
+
+  // donnees de connexion + token
+  const [userToken, setUserToken] = useState({});
+  useEffect(() => {
+    setUserToken(JSON.parse(localStorage.getItem('adminUserCarSell')));
+  }, []);
+
+  // data momba ny token et tout
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${userToken.token}`
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const config = {
+          headers: headers
+        };
         const response = await axios.post(link + '/statistiques/classementCategorieVendues', { pages: nombre });
         setTopMarque(response.data.donnee);
       } catch (e) {
@@ -40,6 +55,7 @@ const TopNCategories = ({ isLoading }) => {
     };
     fetchData();
   }, [nombre]);
+
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

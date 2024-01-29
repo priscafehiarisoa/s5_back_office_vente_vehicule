@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import {capitalize, Grid, MenuItem, TextField, Typography} from '@mui/material';
+import { capitalize, Grid, MenuItem, TextField, Typography } from '@mui/material';
 
 // third-party
 import ApexCharts from 'apexcharts';
@@ -17,11 +17,8 @@ import { gridSpacing } from '../../../store/constant';
 
 // chart data
 // import chartData from './chart-data/total-growth-bar-chart';
-import axios from "axios";
-import config from "../../../config";
-
-
-
+import axios from 'axios';
+import config from '../../../config';
 
 // ==============================|| DASHBOARD DEFAULT - TOTAL GROWTH BAR CHART ||============================== //
 
@@ -45,7 +42,6 @@ const VenteParMoisEtAnneeChart = ({ isLoading }) => {
   const theme = useTheme();
   const customization = useSelector((state) => state.customization);
 
-
   const { navType } = customization;
   const { primary } = theme.palette.text;
   const darkLight = theme.palette.dark.light;
@@ -57,14 +53,30 @@ const VenteParMoisEtAnneeChart = ({ isLoading }) => {
   const secondaryMain = theme.palette.secondary.main;
   const secondaryLight = theme.palette.secondary.light;
 
-  const [donnee,setDonnee]=useState({})
-  const [selectedYear,setSelectedYear]=useState(new Date().getFullYear())
+  const [donnee, setDonnee] = useState({});
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
+  // donnees de connexion + token
+  const [userToken, setUserToken] = useState({});
+  useEffect(() => {
+    setUserToken(JSON.parse(localStorage.getItem('adminUserCarSell')));
+  }, [selectedYear]);
+  console.log('token chart tsy mandeha ' + userToken.token);
+
+  // data momba ny token et tout
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${userToken.token}`
+  };
 
   useEffect(() => {
     const getDatas = async () => {
       try {
-        const response1 = await axios.post(link + "/statistiques/statistiqueVenteParMois", { annee: selectedYear });
+        const config = {
+          headers: headers
+        };
+        const response1 = await axios.post(link + '/statistiques/statistiqueVenteParMois', { annee: selectedYear });
+        console.log('=_=' + selectedYear);
         setDonnee(response1.data.donnee);
       } catch (e) {
         console.log(e);
@@ -139,13 +151,13 @@ const VenteParMoisEtAnneeChart = ({ isLoading }) => {
     },
     series: [
       {
-        name: 'Sales',
-        data: donnee.statistique?.map((item) => item.nombre)
+        name: 'ventes ',
+        data: donnee?.statistique?.map((item) => item.nombre)
       }
     ]
   };
 
-console.log(JSON.stringify(donnee))
+  console.log(JSON.stringify(donnee));
 
   useEffect(() => {
     const newChartData = {
@@ -156,8 +168,7 @@ console.log(JSON.stringify(donnee))
           style: {
             colors: [primary, primary, primary, primary, primary, primary, primary, primary, primary, primary, primary, primary]
           }
-        },
-
+        }
       },
       yaxis: {
         labels: {
@@ -177,7 +188,6 @@ console.log(JSON.stringify(donnee))
           colors: grey500
         }
       }
-
     };
 
     // do not load chart when loading
@@ -186,10 +196,7 @@ console.log(JSON.stringify(donnee))
     }
   }, [donnee, isLoading]);
 
-
-
-
-  console.log(JSON.stringify(donnee.statistique?.map((item) => item.nombre)))
+  console.log(JSON.stringify(donnee.statistique?.map((item) => item.nombre)));
   return (
     <>
       {isLoading ? (
@@ -202,7 +209,7 @@ console.log(JSON.stringify(donnee))
                 <Grid item>
                   <Grid container direction="column" spacing={1}>
                     <Grid item>
-                      <Typography variant="subtitle2">{capitalize(donnee.title||"")}</Typography>
+                      <Typography variant="subtitle2">{capitalize(donnee.title || '')}</Typography>
                     </Grid>
                     <Grid item>
                       <Typography variant="h3"></Typography>
@@ -210,7 +217,13 @@ console.log(JSON.stringify(donnee))
                   </Grid>
                 </Grid>
                 <Grid item>
-                  <TextField id="standard-select-currency" label={"année"} select value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
+                  <TextField
+                    id="standard-select-currency"
+                    label={'année'}
+                    select
+                    value={selectedYear}
+                    onChange={(e) => setSelectedYear(e.target.value)}
+                  >
                     {years.map((option) => (
                       <MenuItem key={option} value={option}>
                         {option}

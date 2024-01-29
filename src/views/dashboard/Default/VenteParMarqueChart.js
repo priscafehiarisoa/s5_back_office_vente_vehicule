@@ -58,7 +58,19 @@ const VenteParMarqueChart = ({ isLoading }) => {
   const [listMaque,setListMarque]=useState([])
   const [selectedYear,setSelectedYear]=useState(new Date().getFullYear())
   const [selectedMarque,setSelectedMarque]=useState("")
+  // donnees de connexion + token
+  const [userToken, setUserToken] = useState({});
+  useEffect(() => {
+    setUserToken(JSON.parse(localStorage.getItem('adminUserCarSell')));
+  }, [selectedYear]);
+  console.log("token "+userToken.token)
 
+  // data momba ny token et tout
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${userToken.token}`
+  };
+  console.log("chart marque " +userToken.token)
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -72,7 +84,10 @@ const VenteParMarqueChart = ({ isLoading }) => {
 
     const fetchDonnee = async () => {
       try {
-        const response = await axios.post(link + "/statistiques/statistiqueVenteParMarque", { marque: selectedMarque, annee: selectedYear });
+        const config = {
+          headers: headers
+        };
+        const response = await axios.post(link + "/statistiques/statistiqueVenteParMarque", { marque: selectedMarque, annee: selectedYear },config);
         setDonnee(response.data.donnee);
       } catch (e) {
         console.log(e);

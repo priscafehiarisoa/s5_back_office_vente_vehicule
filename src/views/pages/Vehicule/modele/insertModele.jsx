@@ -25,6 +25,7 @@ import { useTheme, styled } from '@mui/material/styles';
 import MainCard from 'ui-component/cards/MainCard';
 import { IconPencil, IconTrash } from '@tabler/icons';
 import TablePagination from '@mui/material/TablePagination';
+import ErrorAlert from "../../../../ui-component/alert/ErrorAlert";
 
 const InsertModele = () => {
   const link = `${config.http}://${config.host}`;
@@ -40,6 +41,7 @@ const InsertModele = () => {
   const indexOfLastRow = (page + 1) * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   const currentRows = modele.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
+  const [error, setError] = useState(null);
 
   //
 
@@ -49,12 +51,38 @@ const InsertModele = () => {
     id_marque: ''
   });
 
-  const handleSubmit = async () => {
+  // donnees de connexion + token
+  const [userToken, setUserToken] = useState({});
+  useEffect(() => {
+    setUserToken(JSON.parse(localStorage.getItem('adminUserCarSell')));
+  }, []);
+
+  // data momba ny token et tout
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${userToken.token}`
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
     try {
-      const resp = await axios.post(link + '/modele', formData);
+      const config = {
+        headers: headers
+      };
+      const resp = await axios.post(link + '/modele', formData,config);
       setInserted(inserted + 1);
     } catch (e) {
-      console.log(e);
+      if (e.isAxiosError) {
+        if (e.code === 'ERR_NETWORK') {
+          setError('une erreur est survenue');
+        }
+      } else {
+        // Non-Axios error
+        console.error('Non-Axios Error:', err.message);
+        setError('une erreur est survenue');
+
+      }
     }
   };
 
@@ -282,6 +310,10 @@ const InsertModele = () => {
                 ))}
               </Select>
             </FormControl>
+            <div style={{margin:"0 10%"}}>
+              {error && <ErrorAlert message={error } ></ErrorAlert>}
+
+            </div>
             <div>
               <Button
                 variant="contained"

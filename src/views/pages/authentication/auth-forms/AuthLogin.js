@@ -99,7 +99,13 @@ const FirebaseLogin = ({ ...others }) => {
               console.log('login yay');
               const response = await axios.post(link + '/user/authenticate', { email: values.email, password: values.password });
               console.log(JSON.stringify(response.data));
-              localStorage.setItem("adminUserCarSell",JSON.stringify(response.data))
+              let data= {
+                token: response.data.token,
+                userId:response.data.userId
+              }
+              localStorage.setItem("adminUserCarSell",JSON.stringify(data))
+              document.cookie = `token=${JSON.stringify(data)}; max-age=3600; path=/`;
+
               navigate('/')
               window.location.reload();
 
