@@ -23,7 +23,7 @@ import { IconPencil, IconTrash } from '@tabler/icons';
 import TablePagination from '@mui/material/TablePagination';
 
 const InsertMoteur = () => {
-  const link = `${config.http}://${config.host}:${config.port}`;
+  const link = `${config.http}://${config.host}`;
   const [inserted, setInserted] = useState(0);
   const theme = useTheme();
 
@@ -38,6 +38,7 @@ const InsertMoteur = () => {
   const currentRows = moteur.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
 
   //
+  console.log( ">>"+link)
 
   const [formData, setFormData] = useState({
     nom_moteur: '',

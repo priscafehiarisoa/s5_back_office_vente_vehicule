@@ -1,8 +1,9 @@
-import { lazy } from 'react';
+import React, { lazy, useEffect } from 'react';
 
 // project imports
 import MainLayout from '../layout/MainLayout';
 import Loadable from '../ui-component/Loadable';
+import { Navigate } from 'react-router';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('../views/dashboard/Default')));
@@ -11,6 +12,8 @@ const DashboardDefault = Loadable(lazy(() => import('../views/dashboard/Default'
 const SamplePage = Loadable(lazy(() => import('../views/sample-page')));
 
 // ==============================|| MAIN ROUTING ||============================== //
+const isAuthenticated = localStorage.getItem('adminUserCarSell') !== null;
+
 
 const MainRoutes = {
   path: '/',
@@ -18,23 +21,20 @@ const MainRoutes = {
   children: [
     {
       path: '/',
-      element: <DashboardDefault />
-    }, {
-      path: '/free',
-      element: <DashboardDefault />
+      element: isAuthenticated ? <DashboardDefault /> : <Navigate to="/login" replace={true} />
     },
+    // {
+    //   path: '/free',
+    //   element: <DashboardDefault />
+    // },
     {
-      path: 'dashboard',
+      path: '/dashboard',
       children: [
         {
           path: 'default',
-          element: <DashboardDefault />
+          element: isAuthenticated ? <DashboardDefault /> : <Navigate to="/login" replace={true} />
         }
       ]
-    },
-    {
-      path: 'sample-page',
-      element: <SamplePage />
     }
   ]
 };

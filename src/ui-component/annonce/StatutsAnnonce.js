@@ -42,6 +42,7 @@ const StatutsAnnonce = ({ etat }) => {
     ({ theme }) => `
   box-sizing: border-box;
   margin: 0;
+  margin: 1% 10%;
   padding: 0;
   font-size: 14px;
   list-style: none;

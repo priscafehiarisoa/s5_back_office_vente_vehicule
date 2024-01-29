@@ -10,6 +10,9 @@ import TotalIncomeCard from '../../../ui-component/cards/Skeleton/TotalIncomeCar
 
 // assets
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
+import {useEffect, useState} from "react";
+import axios from "axios";
+import config from "../../../config";
 
 // styles
 const CardWrapper = styled(MainCard)(({ theme }) => ({
@@ -43,6 +46,19 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 const TotalIncomeDarkCard = ({ isLoading }) => {
   const theme = useTheme();
+  const [nombre,setNombre]=useState(0)
+  const [nombreJours,setnombrejours]=useState(10)
+  const link = `${config.http}://${config.host}`;
+
+  // useEffect(() => {
+  //   const fetchData= async ()=>{
+  //     const result= await axios.get(link+`/nombreAnnoncesVendues/${nombreJours}`)
+  //     setNombre(result.data.donnee)
+  //   }
+  //   fetchData()
+  // }, []);
+
+
 
   return (
     <>
@@ -74,14 +90,15 @@ const TotalIncomeDarkCard = ({ isLoading }) => {
                   }}
                   primary={
                     <Typography variant="h4" sx={{ color: '#fff' }}>
-                      $203k
+                      {nombre}
                     </Typography>
                   }
                   secondary={
                     <Typography variant="subtitle2" sx={{ color: 'primary.light', mt: 0.25 }}>
-                      Total Income
+                      Nombre d&apos;annonces vendues en {nombreJours} jours
                     </Typography>
                   }
+
                 />
               </ListItem>
             </List>

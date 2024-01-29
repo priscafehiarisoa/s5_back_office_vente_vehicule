@@ -1,15 +1,16 @@
-import { lazy } from 'react';
+import React, { lazy } from 'react';
 
 // project imports
 import MainLayout from '../layout/MainLayout';
 import Loadable from '../ui-component/Loadable';
 import InsertCategorie from '../views/pages/Vehicule/categorie/insertCategorie';
+import {Navigate} from "react-router";
 
 // dashboard routing
 const InsertCouleur = Loadable(lazy(() => import('../views/pages/Vehicule/couleur/insertCouleur')));
 
 
-// ==============================|| MAIN ROUTING ||============================== //
+const isAuthenticated = localStorage.getItem("adminUserCarSell")!==null;
 
 const CouleurRoutes = {
   path: '/',
@@ -17,7 +18,7 @@ const CouleurRoutes = {
   children: [
     {
       path: '/InsertCouleur',
-      element: <InsertCouleur />
+      element: isAuthenticated?<InsertCouleur />: <Navigate to="/login" replace={true} />
     }
   ]
 };

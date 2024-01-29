@@ -1,15 +1,16 @@
-import { lazy } from 'react';
+import React, { lazy } from 'react';
 
 // project imports
 import MainLayout from '../layout/MainLayout';
 import Loadable from '../ui-component/Loadable';
 import InsertCategorie from '../views/pages/Vehicule/categorie/insertCategorie';
+import {Navigate} from "react-router";
 
 // dashboard routing
 const InsertMarque = Loadable(lazy(() => import('../views/pages/Vehicule/marque/insertMarque')));
 
 
-// ==============================|| MAIN ROUTING ||============================== //
+const isAuthenticated = localStorage.getItem("adminUserCarSell")!==null;
 
 const MarqueRoutes = {
   path: '/',
@@ -17,7 +18,7 @@ const MarqueRoutes = {
   children: [
     {
       path: '/InsertMarque',
-      element: <InsertMarque />
+      element: isAuthenticated?<InsertMarque />: <Navigate to="/login" replace={true} />
     }
   ]
 };

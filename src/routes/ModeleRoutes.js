@@ -1,14 +1,15 @@
-import { lazy } from 'react';
+import React, { lazy } from 'react';
 
 // project imports
 import MainLayout from '../layout/MainLayout';
 import Loadable from '../ui-component/Loadable';
+import {Navigate} from "react-router";
 
 // dashboard routing
 const InsertModele = Loadable(lazy(() => import('../views/pages/Vehicule/modele/insertModele')));
 
 
-// ==============================|| MAIN ROUTING ||============================== //
+const isAuthenticated = localStorage.getItem("adminUserCarSell")!==null;
 
 const ModeleRoutes = {
   path: '/',
@@ -16,7 +17,7 @@ const ModeleRoutes = {
   children: [
     {
       path: '/Insertmodele',
-      element: <InsertModele />
+      element: isAuthenticated?<InsertModele />: <Navigate to="/login" replace={true} />
     }
   ]
 };

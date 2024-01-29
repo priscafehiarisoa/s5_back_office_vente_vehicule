@@ -5,12 +5,15 @@ import { Grid } from '@mui/material';
 
 // project imports
 import EarningCard from './EarningCard';
-import PopularCard from './PopularCard';
-import TotalOrderLineChartCard from './TotalOrderLineChartCard';
+import TopNMarques from './TopNMarques';
+import TotalOrderLineChartCard from './CommissionParMoisEtAnnee';
 import TotalIncomeDarkCard from './TotalIncomeDarkCard';
 import TotalIncomeLightCard from './TotalIncomeLightCard';
-import TotalGrowthBarChart from './TotalGrowthBarChart';
+import VenteParMoisEtAnneeChart from './VenteParMoisEtAnneeChart';
 import { gridSpacing } from '../../../store/constant';
+import CommissionParMoisEtAnnee from "./CommissionParMoisEtAnnee";
+import VenteParMarqueChart from "./VenteParMarqueChart";
+import TopNCategories from "./TopNCategories";
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
@@ -19,7 +22,7 @@ const Dashboard = () => {
   useEffect(() => {
     setLoading(false);
   }, []);
-
+console.log("tsy mety ")
   return (
     <Grid container spacing={gridSpacing}>
       <Grid item xs={12}>
@@ -28,7 +31,7 @@ const Dashboard = () => {
             <EarningCard isLoading={isLoading} />
           </Grid>
           <Grid item lg={4} md={6} sm={6} xs={12}>
-            <TotalOrderLineChartCard isLoading={isLoading} />
+            <CommissionParMoisEtAnnee isLoading={isLoading} />
           </Grid>
           <Grid item lg={4} md={12} sm={12} xs={12}>
             <Grid container spacing={gridSpacing}>
@@ -45,10 +48,21 @@ const Dashboard = () => {
       <Grid item xs={12}>
         <Grid container spacing={gridSpacing}>
           <Grid item xs={12} md={8}>
-            <TotalGrowthBarChart isLoading={isLoading} />
+            <VenteParMoisEtAnneeChart isLoading={isLoading} />
           </Grid>
           <Grid item xs={12} md={4}>
-            <PopularCard isLoading={isLoading} />
+            <TopNMarques isLoading={isLoading} />
+          </Grid>
+        </Grid>
+      </Grid>
+
+      <Grid item xs={12}>
+        <Grid container spacing={gridSpacing}>
+          <Grid item xs={12} md={8}>
+            <VenteParMarqueChart isLoading={isLoading} />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <TopNCategories isLoading={isLoading} />
           </Grid>
         </Grid>
       </Grid>

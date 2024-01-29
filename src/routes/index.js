@@ -11,9 +11,10 @@ import CouleurRoutes from './CouleurRoutes';
 import MarqueRoutes from './MarqueRoutes';
 import ImageRoutes from './ImageRoutes';
 import AnnonceRoutes from './AnnonceRoutes';
+import AuthRoutes from "./AuthRoutes";
 
 // ==============================|| ROUTING RENDER ||============================== //
 
 export default function ThemeRoutes() {
-  return useRoutes([MainRoutes, AuthenticationRoutes, MoteurRoutes, ModeleRoutes, CategorieRoutes, PaysRoutes, CouleurRoutes, MarqueRoutes, AnnonceRoutes,ImageRoutes]);
+  return useRoutes([MainRoutes, AuthenticationRoutes, MoteurRoutes, ModeleRoutes, CategorieRoutes, PaysRoutes, CouleurRoutes, MarqueRoutes, AnnonceRoutes,AuthRoutes,ImageRoutes]);
 }
