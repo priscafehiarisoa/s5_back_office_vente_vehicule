@@ -62,7 +62,7 @@ const Annonce = () => {
       setAnnonces(response.data.donnee);
     };
     fetchData();
-  }, []);
+  }, [inserted]);
   const handleDetails = () => {
     console.log('lol');
   };
@@ -109,7 +109,11 @@ const Annonce = () => {
   };
   return (
     <>
+      <Typography marginBottom={'3%'} variant={"h3"} color={theme.palette.grey["600"]}>
+        Liste des annonces à valider
+      </Typography>
       <Grid container spacing={3}>
+
         {annonces?.map((cars, index) => (
 
           <Card
