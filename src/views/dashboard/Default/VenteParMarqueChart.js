@@ -76,7 +76,9 @@ const VenteParMarqueChart = ({ isLoading }) => {
       try {
         const marques = await axios.get(link + '/marque');
         setListMarque(marques.data.donnee);
-        setSelectedMarque(marques.data.donnee[0]?.id_marque || ""); // Set default marque
+        if(selectedMarque===""){
+          setSelectedMarque(marques.data.donnee[0]?.id_marque || "");
+        }
       } catch (e) {
         console.log(e);
       }
