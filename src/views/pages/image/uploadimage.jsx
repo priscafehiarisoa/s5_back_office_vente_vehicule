@@ -7,7 +7,7 @@ import axios from 'axios';
 import config from '../../../config';
 
 const Uploadimage = () => {
-  const link = `${config.http}://${config.host}:${config.port}`;
+  const link = `${config.http}://${config.host}`;
   const [imageUpload, setImageUpload] = useState(null);
   const [imageUrls, setImageUrls] = useState([]);
 
@@ -16,13 +16,12 @@ const Uploadimage = () => {
     if (imageUpload == null) return;
     const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
     uploadBytes(imageRef, imageUpload).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then( (url) => {
+      getDownloadURL(snapshot.ref).then((url) => {
         setImageUrls((prev) => [...prev, url]);
         saveImageUrlToBackend(url); // Send the URL to the backend
       });
     });
   };
-
 
   useEffect(() => {
     // Fetch image URLs from the backend
@@ -33,7 +32,7 @@ const Uploadimage = () => {
           setImageUrls(data.donnee);
         }
       })
-      .catch((error) => console.error("Error:", error));
+      .catch((error) => console.error('Error:', error));
   }, []);
   const [formData, setFormData] = useState({
     imgUrl: ''
@@ -42,15 +41,15 @@ const Uploadimage = () => {
   const saveImageUrlToBackend = (imageUrl) => {
     // Make a POST request to your backend to save the image URL
     fetch(link + '/annonce/image', {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ imgUrl: imageUrl }),
+      body: JSON.stringify({ imgUrl: imageUrl })
     })
-      .then(response => response.json())
-      .then(data => console.log(data))
-      .catch(error => console.error("Error:", error));
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.error('Error:', error));
   };
 
   return (
@@ -62,6 +61,8 @@ const Uploadimage = () => {
         }}
       />
       <button onClick={uploadFile}> Upload Image</button>
+
+      <p>liste image </p>
       {imageUrls.map((url, index) => (
         <img key={index} src={url} alt="" />
       ))}

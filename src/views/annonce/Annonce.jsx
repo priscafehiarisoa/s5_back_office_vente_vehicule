@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, Typography, CardMedia, IconButton, Avatar, CardActionArea, capitalize, Grid } from '@mui/material';
 import {
-  IconCheck, IconCircleX,
+  IconCheck,
+  IconCircleX,
   IconClipboardHeart,
   IconHeart,
   IconHeartOff,
@@ -53,8 +54,10 @@ const Annonce = () => {
 
   const [image, setImage] = useState('/images/1-porsche-911-gt3-2021-rt-hero-front.jpg');
   const [inserted, setInserted] = useState(0);
-
   const [annonces, setAnnonces] = useState([]);
+
+  ///modif image
+  const [imagesByAnnonce, setImagesByAnnonce] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -74,20 +77,20 @@ const Annonce = () => {
   const [header, setHeader] = useState({});
 
   useEffect(() => {
-    const getjson=async ()=>{
-      console.log("leo "+JSON.stringify(localStorage.getItem('adminUserCarSell')))
+    const getjson = async () => {
+      console.log('leo ' + JSON.stringify(localStorage.getItem('adminUserCarSell')));
       const token = await JSON.parse(localStorage.getItem('adminUserCarSell'));
       setUserToken(token || {});
-    }
-    getjson()
+    };
+    getjson();
   }, []);
   useEffect(() => {
-   setHeader({
-     'Content-Type': 'application/json',
-     Authorization: `Bearer ${userToken.token}`,
-     'Access-Control-Allow-Origin': "*",
-     'Access-Control-Allow-Methods': "GET,PUT,POST,DELETE,PATCH,OPTIONS"
-   })
+    setHeader({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userToken.token}`,
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS'
+    });
   }, [userToken]);
   function handleFavoriteClick(id) {
     console.log(id);
@@ -97,21 +100,43 @@ const Annonce = () => {
     const config = {
       headers: header
     };
-    const resp = await axios.put(link + `/annonce/validateAnnonce/${id}`,config);
+    const resp = await axios.put(link + `/annonce/validateAnnonce/${id}`, config);
+    console.log(config + id);
     setInserted(inserted + 1);
   };
   const handleRefuser = async (id) => {
     const config = {
       headers: header
     };
-    const resp = await axios.put(link + `/annonce/refuserAnnonce/${id}`,config);
+    const resp = await axios.put(link + `/annonce/refuserAnnonce/${id}`, config);
     setInserted(inserted + 1);
   };
+  /////////////////modif image
+  useEffect(() => {
+    // Fetch image URLs from the backend for each annonce
+    Promise.all(
+      annonces.map((car) => {
+        return fetch(link + '/annonce/getimagesbyId/' + car.id_annonce)
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.statut === 200 && data.donnee) {
+              // Ajoute les URLs d'images spécifiques à chaque annonce
+              setImagesByAnnonce((imagesByAnnonce) => ({
+                ...imagesByAnnonce,
+                [car.id_annonce]: data.donnee
+              }));
+            }
+          })
+          .catch((error) => console.error('Error:', error));
+      })
+    );
+  }, [annonces]);
+
+  ///////////////
   return (
     <>
       <Grid container spacing={3}>
         {annonces?.map((cars, index) => (
-
           <Card
             key={index}
             sx={{ position: 'relative', maxWidth: { xs: '100%', sm: '28%' }, bgcolor: '#ffffff', margin: '2%' }}
@@ -143,38 +168,46 @@ const Annonce = () => {
 
             <div style={{ position: 'relative' }}>
               {/* Image */}
-              <CardActionArea href="https://google.com">
-                <CardMedia component="img" image={require(`../../assets${image}`)} alt="image vehicule" />
-              </CardActionArea>
+              {imagesByAnnonce[cars.id_annonce]?.[0] && (
+                <CardActionArea href="">
+                  <CardMedia component="img" image={imagesByAnnonce[cars.id_annonce][0]} alt=""  sx={{ maxWidth: '100%', maxHeight: '200px', width: 'auto', height: 'auto' }}  />
+                </CardActionArea>
+              )}
 
               {/* Heart icon */}
 
-              <IconButton aria-label="delete"  style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                // backgroundColor: cars.inFavorites ? '#fff' : 'none', // Ajoutez cette ligne pour définir la couleur de fond sur blanc
-                // borderRadius: '50%',
-                color:'none',
-                margin:'2%',
-                backgroundColor:'#fff',
-                fontWeight: 'bolder'
-
-              }} onClick={() => handlevalider(cars.id_annonce)}>
+              <IconButton
+                aria-label="delete"
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  // backgroundColor: cars.inFavorites ? '#fff' : 'none', // Ajoutez cette ligne pour définir la couleur de fond sur blanc
+                  // borderRadius: '50%',
+                  color: 'none',
+                  margin: '2%',
+                  backgroundColor: '#fff',
+                  fontWeight: 'bolder'
+                }}
+                onClick={() => handlevalider(cars.id_annonce)}
+              >
                 <IconCheck fontSize="small" />
               </IconButton>
-              <IconButton aria-label="delete"  style={{
-                position: 'absolute',
-                bottom: 0,
-                left: '17%',
-                // backgroundColor: cars.inFavorites ? '#fff' : 'none', // Ajoutez cette ligne pour définir la couleur de fond sur blanc
-                // borderRadius: '50%',
-                color:'none',
-                margin:'2%',
-                backgroundColor:theme.palette.error.light,
-                fontWeight: 'bolder'
-
-              }} onClick={() => handleRefuser(cars.id_annonce)}>
+              <IconButton
+                aria-label="delete"
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: '17%',
+                  // backgroundColor: cars.inFavorites ? '#fff' : 'none', // Ajoutez cette ligne pour définir la couleur de fond sur blanc
+                  // borderRadius: '50%',
+                  color: 'none',
+                  margin: '2%',
+                  backgroundColor: theme.palette.error.light,
+                  fontWeight: 'bolder'
+                }}
+                onClick={() => handleRefuser(cars.id_annonce)}
+              >
                 <IconCircleX fontSize="small" />
               </IconButton>
 
@@ -211,7 +244,6 @@ const Annonce = () => {
                   </Typography>
                 </Grid>
               </Grid>
-
             </CardContent>
           </Card>
         ))}
