@@ -15,6 +15,8 @@ import config from '../../config';
 import axios from 'axios';
 import DetailAnnonce from './DetailAnnonce';
 import StatutsAnnonce from '../../ui-component/annonce/StatutsAnnonce';
+import AnnonceTemplate from "./AnnonceTemplate";
+import AnnonceListe from "./AnnonceListe";
 
 const Annonce = () => {
   const theme = useTheme();
@@ -112,6 +114,21 @@ const Annonce = () => {
       <Typography marginBottom={'3%'} variant={"h3"} color={theme.palette.grey["600"]}>
         Liste des annonces à valider
       </Typography>
+      <Grid container spacing={4}>
+        <Grid item sm={3}>
+          <AnnonceTemplate />
+        </Grid>
+        <Grid item sm={3}>
+          <AnnonceTemplate />
+        </Grid>
+        <Grid item sm={3}>
+          <AnnonceTemplate />
+        </Grid>
+        <Grid container>
+          <AnnonceListe/>
+        </Grid>
+      </Grid>
+
       <Grid container spacing={3}>
 
         {annonces?.map((cars, index) => (
