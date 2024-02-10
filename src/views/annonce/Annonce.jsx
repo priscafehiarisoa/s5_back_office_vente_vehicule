@@ -114,20 +114,6 @@ const Annonce = () => {
       <Typography marginBottom={'3%'} variant={"h3"} color={theme.palette.grey["600"]}>
         Liste des annonces à valider
       </Typography>
-      <Grid container spacing={4}>
-        <Grid item sm={3}>
-          <AnnonceTemplate />
-        </Grid>
-        <Grid item sm={3}>
-          <AnnonceTemplate />
-        </Grid>
-        <Grid item sm={3}>
-          <AnnonceTemplate />
-        </Grid>
-        <Grid container>
-          <AnnonceListe/>
-        </Grid>
-      </Grid>
 
       <Grid container spacing={3}>
 

@@ -35,7 +35,7 @@ const Login = () => {
     };
 
     getGreeting();
-  }, []); // Empty dependency array to run the effect only once on component mount
+  }, []);
 
   return (
     <AuthWrapper1>
